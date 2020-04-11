@@ -16,4 +16,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements
 
-* [kvh](https://github.com/kvh) for creating the suffix_tree.py[https://github.com/kvh/Python-Suffix-Tree]
+* [kvh](https://github.com/kvh) for creating the [suffix_tree.py](https://github.com/kvh/Python-Suffix-Tree)
