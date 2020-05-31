@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 My suffix tree implementation written in Python based on a Go implementation
 from this site:
@@ -25,7 +26,7 @@ class GenSuffixTree:
             text_array = string
             string = '#'.join(text_array)
 
-        if string[-1] is not "$":
+        if string[-1] != "$":
             string += "$"
 
         # I tried to do the array mapping,
@@ -168,7 +169,7 @@ class GenSuffixTree:
                 self.set_suffix_index_by_DFS(
                     i,
                     label_height + self.edge_length(i))
-            if leaf is 1:
+            if leaf == 1:
                 node.suffix_index = self.size - label_height
 
         def build_suffix_tree(self):
@@ -183,41 +184,38 @@ class GenSuffixTree:
             self.set_suffix_index_by_DFS(self.root, label_height)
 
         def traverse_edge(self, substring, index, start, end):
-            k = start
-            while k <= end[0] and index < len(substring):
-                if self.text[k] is not substring[index]:
+            text_index = start
+            while text_index <= end[0] and index < len(substring):
+                if self.text[text_index] is not substring[index]:
                     return -1
-                k += 1
+                text_index += 1
                 index += 1
             if index >= len(substring):
                 return 1
             return
 
-        def traverse_for_leaf(self, node):
+        def traverse_for_leaf_count(self, node):
             if node.suffix_index > -1:
                 return 1
             count = 0
             for i in node.children.values():
-                count += self.traverse_for_leaf(i)
+                count += self.traverse_for_leaf_count(i)
             return count
-
-        def get_leaf_count(self, node):
-            return self.traverse_for_leaf(node)
 
         def do_traversal(self, node, substring, index):
             if node is None:
                 return -1, 0
             substring_count = 0
             if node.start is not -1:
-                res = self.traverse_edge(substring, index, node.start,
-                                         node.end)
-                if res is -1:
+                result = self.traverse_edge(substring, index, node.start,
+                                            node.end)
+                if result is -1:
                     return substring_count
-                elif res is 1:
+                elif result == 1:
                     if node.suffix_index > -1:
                         substring_count = 1
                     else:
-                        substring_count = self.get_leaf_count(node)
+                        substring_count = self.traverse_for_leaf_count(node)
                     return substring_count
 
             index = index + self.edge_length(node)
