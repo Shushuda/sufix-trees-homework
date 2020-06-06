@@ -51,8 +51,11 @@ class GenSuffixTree:
     def build_suffix_tree(self):
         self.suffix_tree.build_suffix_tree()
 
-    def find_substring(self, substring):
-        return self.suffix_tree.find_substring(substring)
+    def find_one_substring(self, substring) -> bool:
+        return self.suffix_tree.find_one_substring(substring)
+
+    def find_every_substring(self, substring) -> int:
+        return self.suffix_tree.find_every_substring(substring)
 
     def count_substrings_in_strings(self) -> Tuple[int, Set[str]]:
         return self.suffix_tree.count_substrings_in_strings(self.array)
@@ -183,7 +186,7 @@ class GenSuffixTree:
             label_height = 0
             self.set_suffix_index_by_DFS(self.root, label_height)
 
-        def traverse_edge(self, substring, index, start, end):
+        def traverse_for_substring(self, substring, index, start, end):
             text_index = start
             while text_index <= end[0] and index < len(substring):
                 if self.text[text_index] is not substring[index]:
@@ -194,42 +197,53 @@ class GenSuffixTree:
                 return 1
             return
 
-        def traverse_for_leaf_count(self, node):
+        def get_leaf_count(self, node):
             if node.suffix_index > -1:
                 return 1
             count = 0
             for i in node.children.values():
-                count += self.traverse_for_leaf_count(i)
+                count += self.get_leaf_count(i)
             return count
 
-        def do_traversal(self, node, substring, index):
+        def do_traversal(self, node, substring, index, one_substring=False):
             if node is None:
                 return -1, 0
             substring_count = 0
             if node.start is not -1:
-                result = self.traverse_edge(substring, index, node.start,
-                                            node.end)
-                if result is -1:
-                    return substring_count
-                elif result == 1:
+                found = self.traverse_for_substring(substring, index,
+                                                    node.start, node.end)
+                if found == 1:
                     if node.suffix_index > -1:
                         substring_count = 1
+                    elif one_substring:
+                        substring_count = 1
                     else:
-                        substring_count = self.traverse_for_leaf_count(node)
+                        substring_count = self.get_leaf_count(node)
+                    return substring_count
+                elif found is -1:
                     return substring_count
 
             index = index + self.edge_length(node)
             if index < len(substring):
                 if node.children.get(substring[index]):
                     count = self.do_traversal(
-                        node.children.get(substring[index]), substring, index)
+                        node.children.get(substring[index]), substring, index,
+                        one_substring)
                     return count
                 else:
                     return substring_count
             else:
                 return substring_count
 
-        def find_substring(self, substring):
+        def find_one_substring(self, substring):
+            substring_count = self.do_traversal(self.root, substring, 0,
+                                                one_substring=True)
+            if substring_count == 1:
+                return True
+            else:
+                return False
+
+        def find_every_substring(self, substring):
             substring_count = self.do_traversal(self.root, substring, 0)
             return substring_count
 
@@ -238,7 +252,7 @@ class GenSuffixTree:
             substring_amount = 0
 
             for substring in array:
-                result = self.find_substring(substring)
+                result = self.find_every_substring(substring)
                 if result > 1:
                     substring_amount += 1
                     found_substrings.add(substring)
