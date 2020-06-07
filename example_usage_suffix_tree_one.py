@@ -11,7 +11,7 @@ substring = "sde"
 
 print("String jako calosc:", text)
 print("String jako zbior:", Z)
-print("Poszukiwany substring (jedno wystepowanie):", substring)
+print("Poszukiwany substring:", substring)
 
 print("-------------------")
 print("Generowanie drzewa z tekstu jako calosc:")
@@ -23,6 +23,8 @@ print(f"Lancuchow bedacych podlancuchem innego lancucha zbioru Z "
 print(f"Znalezione podlancuchy: {substrings_1}")
 print(f"Czy substring '{substring}' jest podlancuchem lancucha Z?")
 print(tree_1.find_one_substring(substring))
+print(f"Substringow '{substring}' jest:")
+print(tree_1.find_every_substring(substring))
 
 print("-------------------")
 print("Generowanie drzewa z tekstu jako zbior:")
@@ -34,3 +36,5 @@ print(f"Lancuchow bedacych podlancuchem innego lancucha zbioru Z "
 print(f"Znalezione podlancuchy: {substrings_2}")
 print(f"Czy substring '{substring}' jest podlancuchem zbioru lancuchow Z?")
 print(tree_2.find_one_substring(substring))
+print(f"Substringow '{substring}' jest:")
+print(tree_2.find_every_substring(substring))
