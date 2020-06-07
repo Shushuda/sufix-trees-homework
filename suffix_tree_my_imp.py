@@ -213,9 +213,7 @@ class GenSuffixTree:
                 found = self.traverse_for_substring(substring, index,
                                                     node.start, node.end)
                 if found == 1:
-                    if node.suffix_index > -1:
-                        substring_count = 1
-                    elif one_substring:
+                    if node.suffix_index > -1 or one_substring:
                         substring_count = 1
                     else:
                         substring_count = self.get_leaf_count(node)
